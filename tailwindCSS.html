@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt_BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind CSS</title>
+    <style> 
+        .meu-botao {
+            background-color: #bf97ed; /* Verde */
+            padding: 8px 10px;
+            border-radius: 4px;       
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-300">
+
+    <button class="meu-botao"> Botão com CSS PURO </button>
+    
+    <br><br><br>
+
+    <button class="bg-purple-500 px-4 py-2 rounded"> Botão com Tailwind CSS </button>
+
+    <br><br><br>
+
+    <div class="p-6 max-w-sm bg-white rounded-lg">
+        <h2 class="text-2xl font-bold text-gray-900">Titulo do Card</h2>
+        <p class="text-sm font-sans leading-relaxed">Este paragarfo demonstra o uso do espaço e cores de texto </p>
+    </div>
+
+    <br><br><br>
+
+    <nav class="flex justify-between items-center p-4 bg-gray-100">
+        <span class="font-bold">Logo</span>
+        <div class="flex gap-4">
+            <a href="#" class="text-blue-600">Home</a>
+            <a href="#" class="text-blue-600">Sobre</a>
+        </div>
+    </nav>
+
+    <br><br><br>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4"> 
+        <button class="bg-blue-500 text-white hover:bg-blue-600 p-3 rounded transition-colors">Enviar</button>
+    </div>
+
+
+</body>
+</html>
