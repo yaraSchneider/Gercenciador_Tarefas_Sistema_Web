@@ -3,9 +3,19 @@
 ### ==============================
 
 ### Testar integridade do sistema (Health Check)
-
 GET http://localhost:3000/api/health
 
 ### Desafio
-
 GET http://localhost:3000/api/version
+
+### Rotas GET
+GET http://localhost:3000/api/tasks
+
+#### Rotas POST
+POST http://localhost:3000/api/tasks
+Content-Type: application/json
+
+{
+    "title": "Estudar Node.js no Módulo 2",
+    "status": "pending"
+}
