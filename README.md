@@ -8,7 +8,9 @@ A estrutura atual combina:
 
 - front-end em HTML com Tailwind CSS
 - backend em TypeScript
-- API REST para manipular tarefas em memória
+- API REST com Express para manipular tarefas
+- persistência de tarefas em banco de dados SQLite
+- validação de dados e consultas parametrizadas
 - ambiente de desenvolvimento configurado com scripts para rodar e testar a aplicação
 
 ## Autora
@@ -26,13 +28,16 @@ Criar um gerenciador de tarefas funcional, com foco em:
 
 ## Status Atual do Projeto
 
-As atualizações implementadas hoje incluem:
+As atualizações implementadas no commit mais recente incluem:
 
 - criação do servidor Express em TypeScript
 - configuração do projeto com scripts de desenvolvimento e build
-- implementação de API REST para tarefas
-- banco de dados provisório em memória (RAM)
-- rotas de diagnóstico e gestão de tarefas
+- criação automática do banco `tarefas.db` e das tabelas `tarefas` e `usuarios`
+- inserção de tarefas no SQLite por meio da rota `POST /api/tasks`
+- validação do título, que é obrigatório e deve conter pelo menos 3 caracteres após a remoção de espaços
+- suporte às prioridades `low`, `medium` e `high`, usando `medium` quando uma prioridade inválida não é informada
+- busca de tarefas pelo parâmetro `search` com prepared statement
+- exemplos de sucesso e de validação no arquivo `Aula_5e6/request.http`
 
 ## Tecnologias Utilizadas
 
@@ -51,6 +56,7 @@ Gercenciador_Tarefas_Sistema_Web/
 ├── package.json                # Scripts e dependências do projeto
 ├── tailwind.config.js          # Configuração do Tailwind CSS
 ├── README.md                   # Documentação do projeto
+├── tarefas.db                  # Banco de dados SQLite
 ├── Dicas e Truques.txt         # Anotações auxiliares
 ├── desafio_Aulas_3e4/          # Arquivos das aulas 3 e 4
 │   └── Desafio_3e4.html
@@ -99,40 +105,16 @@ http://localhost:3000
 
 ### Rotas implementadas
 
-#### Health Check
-
-```http
-GET /api/health
-```
-
-Resposta:
-
-```json
-{
-  "status": "ok",
-  "message": "Servidor do Gestor de Tarefas ativo!"
-}
-```
-
-#### Versão da aplicação
-
-```http
-GET /api/version
-```
-
-Resposta:
-
-```json
-{
-  "appName": "Gestor de Tarefas",
-  "version": "1.0.0"
-}
-```
-
 #### Listar tarefas
 
 ```http
 GET /api/tasks
+```
+
+Também é possível filtrar pelo título:
+
+```http
+GET /api/tasks?search=sqlite
 ```
 
 #### Criar tarefa
@@ -146,9 +128,12 @@ Body de exemplo:
 
 ```json
 {
-  "title": "Estudar Node.js no Módulo 2"
+  "title": "Estudar Node.js no Módulo 2",
+  "prioridade": "high"
 }
 ```
+
+O campo `title` é obrigatório e precisa ter pelo menos 3 caracteres válidos. A rota retorna `400` quando essa regra não é atendida e `201` quando a tarefa é criada com sucesso. A prioridade aceita os valores `low`, `medium` e `high`.
 
 #### Remover tarefa
 
@@ -158,18 +143,18 @@ DELETE /api/tasks/:id
 
 ## Banco de Dados Atual
 
-Atualmente, o projeto usa uma estrutura em memória para armazenar as tarefas, o que permite testar o fluxo de criação, leitura e exclusão sem a necessidade de banco externo.
+O projeto usa o SQLite por meio da biblioteca `better-sqlite3`. Ao iniciar o servidor, o arquivo `tarefas.db` é aberto e as tabelas são criadas automaticamente caso ainda não existam.
+
+As tarefas persistidas possuem os campos `id`, `titulo`, `prioridade` e `status`. A tabela `usuarios` também é criada e recebe um usuário inicial para os exemplos de consulta.
 
 Exemplo de estrutura:
 
-```json
-[
-  {
-    "id": 1,
-    "title": "Estudar Arquitetura REST no Módulo 2",
-    "status": "pending"
-  }
-]
+```text
+ tarefas
+ ├── id          INTEGER PRIMARY KEY AUTOINCREMENT
+ ├── titulo      TEXT NOT NULL
+ ├── prioridade  TEXT DEFAULT 'medium'
+ └── status      TEXT DEFAULT 'pending'
 ```
 
 ## Como Testar as Rotas
@@ -179,28 +164,32 @@ O arquivo `Aula_5e6/request.http` contém exemplos prontos para uso com clientes
 Exemplos:
 
 ```http
-GET http://localhost:3000/api/health
 GET http://localhost:3000/api/tasks
+GET http://localhost:3000/api/tasks?search=SQLite
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
 
 {
-  "title": "Estudar Node.js no Módulo 2"
+  "title": "Estudar Node.js no Módulo 2",
+  "prioridade": "medium"
 }
 ```
+
+O arquivo também contém cenários para título vazio, título com menos de 3 caracteres e requisição sem corpo, todos esperados com status `400`.
 
 ## Observações de Desenvolvimento
 
 - A API foi desenvolvida para servir de base para integração com o front-end.
-- O armazenamento atual é temporário e fica em memória durante a execução do servidor.
+- As rotas de listagem e criação usam o SQLite e mantêm os dados após o encerramento do servidor.
+- A rota `DELETE /api/tasks/:id` ainda utiliza o array provisório em memória e precisa ser adaptada para remover registros do SQLite.
 - A interface inicial do projeto foi criada com foco em layout e fluxo de uso.
-- O próximo passo natural é conectar a interface com as rotas da API e implementar persistência real de dados.
+- As rotas `/api/health` e `/api/version` estão temporariamente desativadas no servidor.
 
 ## Próximos Passos Sugeridos
 
-- integrar front-end com a API REST
 - adicionar atualização de tarefas
-- implementar persistência com banco de dados real
+- adaptar a exclusão de tarefas para o SQLite
+- integrar front-end com a API REST
 - criar autenticação e gerenciamento de usuários
 - evoluir a interface para um sistema mais completo de gestão de produtividade
 
