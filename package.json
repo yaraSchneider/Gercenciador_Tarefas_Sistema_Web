@@ -1,1 +1,25 @@
-{"name":"gerenciador-de-tarefas","version":"1.0.0","type":"module","scripts":{"dev":"npx tsx watch Aula_5e6/server.ts","start":"tsx Aula_5e6/server.ts","build":"tsc -p Aula_5e6/tsconfig.json"},"dependencies":{"better-sqlite3":"^13.0.3","express":"^5.2.1"},"devDependencies":{"@types/better-sqlite3":"^9.6.0","@types/express":"^5.0.6","@types/node":"^26.2.0","tsx":"^4.23.12","typescript":"^7.0.2"}}
+{
+  "name": "gerenciador-de-tarefas",
+  "version": "1.0.0",
+  "type": "module",
+ "scripts": {
+  "dev": "tsx watch server.ts",
+  "start": "tsx server.ts",
+  "build": "tsc"
+},
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.2.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  },
+  "allowScripts": {
+    "better-sqlite3@13.0.3": true,
+    "esbuild@0.28.2": true
+  }
+}
