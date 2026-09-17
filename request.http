@@ -9,10 +9,10 @@ GET http://localhost:3000/api/version
 ### 3. Listar todas as tarefas
 GET http://localhost:3000/api/tasks
 
-### 4. Buscar tarefas por título (search)
+### 4. Buscar tarefas por título
 GET http://localhost:3000/api/tasks?search=comprar
 
-### 5. Criar uma nova tarefa (POST)
+### 5. Criar tarefa válida
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
 
@@ -21,7 +21,7 @@ Content-Type: application/json
     "prioridade": "high"
 }
 
-### 6. Criar tarefa com título inválido (deve retornar 400)
+### 6. Criar tarefa com título inválido
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
 
@@ -30,7 +30,7 @@ Content-Type: application/json
     "prioridade": "high"
 }
 
-### 7. Criar tarefa com prioridade inválida (será definida como 'medium')
+### 7. Prioridade inválida: deve usar medium como padrão seguro
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
 
@@ -39,7 +39,7 @@ Content-Type: application/json
     "prioridade": "muito_urgente"
 }
 
-### 8. Atualizar tarefa completamente (PUT)
+### 8. PUT completo
 PUT http://localhost:3000/api/tasks/1
 Content-Type: application/json
 
@@ -49,7 +49,7 @@ Content-Type: application/json
     "status": "completed"
 }
 
-### 9. Atualizar tarefa com dados inválidos (deve retornar 400)
+### 9. PUT com dados inválidos
 PUT http://localhost:3000/api/tasks/1
 Content-Type: application/json
 
@@ -59,7 +59,7 @@ Content-Type: application/json
     "status": "completed"
 }
 
-### 10. Atualizar tarefa inexistente (deve retornar 404)
+### 10. PUT de tarefa inexistente
 PUT http://localhost:3000/api/tasks/999
 Content-Type: application/json
 
@@ -69,7 +69,7 @@ Content-Type: application/json
     "status": "pending"
 }
 
-### 11. Atualização parcial (PATCH) - Apenas título
+### 11. PATCH - apenas título
 PATCH http://localhost:3000/api/tasks/3
 Content-Type: application/json
 
@@ -77,7 +77,7 @@ Content-Type: application/json
     "title": "Atualizando apenas o título"
 }
 
-### 12. Atualização parcial (PATCH) - Apenas status
+### 12. PATCH - apenas status
 PATCH http://localhost:3000/api/tasks/1
 Content-Type: application/json
 
@@ -85,7 +85,7 @@ Content-Type: application/json
     "status": "completed"
 }
 
-### 13. Atualização parcial (PATCH) - Apenas prioridade
+### 13. PATCH - apenas prioridade
 PATCH http://localhost:3000/api/tasks/1
 Content-Type: application/json
 
@@ -93,7 +93,7 @@ Content-Type: application/json
     "prioridade": "low"
 }
 
-### 14. Atualização parcial (PATCH) - Múltiplos campos
+### 14. PATCH - múltiplos campos
 PATCH http://localhost:3000/api/tasks/1
 Content-Type: application/json
 
@@ -103,7 +103,7 @@ Content-Type: application/json
     "status": "pending"
 }
 
-### 15. Atualização parcial com dados inválidos (deve retornar 400)
+### 15. PATCH com dados inválidos
 PATCH http://localhost:3000/api/tasks/1
 Content-Type: application/json
 
@@ -112,13 +112,13 @@ Content-Type: application/json
     "prioridade": "invalid_priority"
 }
 
-### 16. Atualização parcial sem corpo (deve retornar 400)
+### 16. PATCH sem campos
 PATCH http://localhost:3000/api/tasks/1
 Content-Type: application/json
 
 {}
 
-### 17. Atualização parcial de tarefa inexistente (deve retornar 404)
+### 17. PATCH de tarefa inexistente
 PATCH http://localhost:3000/api/tasks/999
 Content-Type: application/json
 
@@ -126,19 +126,19 @@ Content-Type: application/json
     "status": "completed"
 }
 
-### 18. Excluir tarefa (DELETE)
+### 18. DELETE válido
 DELETE http://localhost:3000/api/tasks/1
 
-### 19. Excluir tarefa inexistente (deve retornar 404)
+### 19. DELETE inexistente
 DELETE http://localhost:3000/api/tasks/999
 
-### 20. Teste de Injeção SQL - Buscando tarefa com SQL Injection
+### 20. Teste de SQL Injection no search
 GET http://localhost:3000/api/tasks?search=%'; DROP TABLE tarefas; --
 
-### 21. Teste de Injeção SQL - Buscando tarefa com caractere especial
+### 21. Search com caractere especial
 GET http://localhost:3000/api/tasks?search=tarefa%25
 
-### 22. Criar múltiplas tarefas para testes
+### 22. Criar tarefa de baixa prioridade
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
 
@@ -147,7 +147,7 @@ Content-Type: application/json
     "prioridade": "low"
 }
 
-### 23. Criar outra tarefa
+### 23. Criar tarefa prioritária
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
 
@@ -156,13 +156,13 @@ Content-Type: application/json
     "prioridade": "high"
 }
 
-### 24. Buscar tarefas com search vazio (retorna todas)
+### 24. Search vazio
 GET http://localhost:3000/api/tasks?search=
 
-### 25. Buscar tarefas com termo que não existe
+### 25. Search sem resultado
 GET http://localhost:3000/api/tasks?search=tarefa_inexistente
 
-### 26. Teste de ID inválido no PUT (deve retornar 400)
+### 26. PUT com ID inválido
 PUT http://localhost:3000/api/tasks/abc
 Content-Type: application/json
 
@@ -172,7 +172,7 @@ Content-Type: application/json
     "status": "pending"
 }
 
-### 27. Teste de ID inválido no PATCH (deve retornar 400)
+### 27. PATCH com ID inválido
 PATCH http://localhost:3000/api/tasks/abc
 Content-Type: application/json
 
@@ -180,10 +180,10 @@ Content-Type: application/json
     "status": "completed"
 }
 
-### 28. Teste de ID inválido no DELETE (deve retornar 400)
+### 28. DELETE com ID inválido
 DELETE http://localhost:3000/api/tasks/abc
 
-### 29. Criar tarefa com título de 3 caracteres exatos (válido)
+### 29. Título com 3 caracteres exatos: válido
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
 
@@ -192,11 +192,41 @@ Content-Type: application/json
     "prioridade": "medium"
 }
 
-### 30. Criar tarefa com título de 2 caracteres (inválido)
+### 30. Título com 2 caracteres: inválido
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
 
 {
     "title": "AB",
     "prioridade": "medium"
+}
+
+### 31. ID negativo no DELETE: inválido
+DELETE http://localhost:3000/api/tasks/-1
+
+### 32. ID decimal no PUT: inválido
+PUT http://localhost:3000/api/tasks/1.5
+Content-Type: application/json
+
+{
+    "title": "Título válido",
+    "prioridade": "medium",
+    "status": "pending"
+}
+
+### 33. Quebrando o Type Guard: título numérico - deve retornar 400
+POST http://localhost:3000/api/tasks
+Content-Type: application/json
+
+{
+    "title": 123,
+    "prioridade": "high"
+}
+
+### 34. Quebrando a Allowlist: status não permitido - deve retornar 400
+PATCH http://localhost:3000/api/tasks/1
+Content-Type: application/json
+
+{
+    "status": "cancelled"
 }
