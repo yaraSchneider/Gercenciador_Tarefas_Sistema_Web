@@ -57,13 +57,19 @@ Gercenciador_Tarefas_Sistema_Web/
 ├── tailwind.config.js          # Configuração do Tailwind CSS
 ├── README.md                   # Documentação do projeto
 ├── tarefas.db                  # Banco de dados SQLite
+├── src/
+│   ├── app.ts                  # Configuração do Express e middlewares
+│   ├── server.ts               # Inicialização do servidor HTTP
+│   ├── config/                 # Configurações da aplicação
+│   ├── database/               # Conexão e criação das tabelas SQLite
+│   ├── types/                  # Tipos e valores válidos do domínio
+│   ├── repositories/           # Consultas e persistência no banco
+│   ├── controllers/            # Regras das requisições HTTP
+│   └── routes/                 # Mapeamento dos endpoints da API
 ├── Dicas e Truques.txt         # Anotações auxiliares
 ├── desafio_Aulas_3e4/          # Arquivos das aulas 3 e 4
 │   └── Desafio_3e4.html
-├── Aula_5e6/
-│   ├── server.ts               # Servidor Express da aplicação
-│   ├── request.http            # Exemplos de requisições HTTP
-│   └── tsconfig.json           # Configuração do TypeScript
+├── request.http                # Exemplos de requisições HTTP
 └── node_modules/               # Dependências instaladas
 ```
 
@@ -81,7 +87,7 @@ npm install
 npm run dev
 ```
 
-Esse comando utiliza o `tsx watch` para observar alterações no arquivo `Aula_5e6/server.ts` e reiniciar automaticamente o servidor.
+Esse comando utiliza o `tsx watch` para observar alterações em `src/server.ts` e reiniciar automaticamente o servidor.
 
 ### 3. Rodar diretamente sem watch
 
