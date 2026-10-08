@@ -23,11 +23,28 @@ export function authHeaders(): HeadersInit {
 
 export async function tratarResposta<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    const errorData = (await res.json().catch(() => null)) as
-      | { error?: string }
-      | null;
+    const responseBody = await res.text();
+    let message = `Erro HTTP ${res.status}.`;
 
-    throw new Error(errorData?.error ?? 'Erro ao processar a requisição.');
+    if (responseBody) {
+      try {
+        const errorData: unknown = JSON.parse(responseBody);
+        if (
+          typeof errorData === 'object' &&
+          errorData !== null &&
+          'error' in errorData &&
+          typeof errorData.error === 'string'
+        ) {
+          message = errorData.error;
+        } else {
+          message = responseBody;
+        }
+      } catch {
+        message = responseBody;
+      }
+    }
+
+    throw new Error(message);
   }
 
   return (await res.json()) as T;

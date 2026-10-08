@@ -38,8 +38,20 @@ function obterId(req: Request, res: Response): number | null {
     return id;
 }
 
-export function listarTarefas(_req: Request, res: Response): void {
-    res.json(taskRepository.listar());
+export function listarTarefas(req: Request, res: Response): void {
+    const { search } = req.query;
+
+    if (search === undefined || search === "") {
+        res.json(taskRepository.listar());
+        return;
+    }
+
+    if (typeof search !== "string") {
+        res.status(400).json({ error: "Parâmetro search inválido." });
+        return;
+    }
+
+    res.json(taskRepository.buscarPorTitulo(search));
 }
 
 export function buscarTarefaPorId(req: Request, res: Response): void {

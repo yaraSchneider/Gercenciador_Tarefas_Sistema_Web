@@ -9,11 +9,7 @@ function Saudacao() {
 export default function App() {
   const [n, setN] = useState(0);
   const [statusServidor, setStatusServidor] = useState('Carregando...');
-  const [tarefas, setTarefas] = useState<Tarefa[]>([
-    { id: 1, titulo: 'Configurar Vite e React', prioridade: 'alta', status: 'pending' },
-    { id: 2, titulo: 'Entender useState e useEffect', prioridade: 'media', status: 'in_progress' },
-    { id: 3, titulo: 'Renderizar lista com map()', prioridade: 'baixa', status: 'completed' },
-  ]);
+  const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [erro, setErro] = useState('');
 
   useEffect(() => {
@@ -41,11 +37,7 @@ export default function App() {
     const carregarTarefas = async () => {
       try {
         const tarefasCarregadas = await listarTarefas();
-
-        if (tarefasCarregadas.length > 0) {
-          setTarefas(tarefasCarregadas);
-        }
-
+        setTarefas(tarefasCarregadas);
         console.log('Tarefas carregadas:', tarefasCarregadas);
       } catch (error) {
         const mensagem =
@@ -79,6 +71,8 @@ export default function App() {
         <h2>Minhas Tarefas</h2>
         {erro ? (
           <p className="erro">{erro}</p>
+        ) : tarefas.length === 0 ? (
+          <p>Nenhuma tarefa cadastrada.</p>
         ) : (
           <ul className="lista-tarefas">
             {tarefas.map((tarefa) => (

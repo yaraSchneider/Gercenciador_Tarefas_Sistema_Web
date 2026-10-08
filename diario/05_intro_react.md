@@ -12,7 +12,9 @@ Também configurei o CORS no back-end com `cors`, pois o front-end roda em `http
 
 Decidi manter a autenticação do backend intacta e apenas criar a estrutura do front-end de forma compatível com a API real. Na parte da lista de tarefas, usei `map()` para renderizar os itens vindos da API e mostrar as tarefas em tela.
 
-A parte mais desafiadora foi respeitar a estrutura real do projeto e não inventar rotas ou campos que não existissem. Foi preciso confirmar o formato da resposta da API e adaptar a interface `Tarefa` de acordo com os dados reais do back-end.
+A parte mais desafiadora foi respeitar a estrutura real do projeto e não inventar rotas ou campos que não existissem. Foi preciso confirmar o formato da resposta da API e adaptar a interface `Tarefa` de acordo com os dados reais do back-end. Também ajustei o endpoint para que o parâmetro `search` da listagem filtrasse as tarefas usando a consulta já existente no repositório. Quando a API não retorna tarefas, a interface agora mostra uma mensagem de lista vazia, sem substituir os dados reais por exemplos.
+
+O template mais recente do Vite trouxe Oxlint no lugar de ESLint, então configurei o ESLint explicitamente para cumprir a atividade e troquei o comando de lint do projeto.
 
 Com isso, o projeto ficou com o front-end funcionando, o contador interativo funcionando, a verificação do servidor funcionando e a lista de tarefas renderizada corretamente.
 
