@@ -1,86 +1,64 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import { listarTarefas, type Tarefa } from './api';
+/**
+ * App.tsx — o "cerebro" da aplicação: decide qual tela mostrar.
+ *
+ * Hoje existem dois estados possíveis:
+ *   - deslogado -> mostra o <Login />
+ *   - logado    -> mostra o placeholder que será a lista de tarefas (Aula 07)
+ */
 
-function Saudacao() {
-  return <h1>Olá, turma! Minha primeira interface!</h1>;
-}
+import { useState } from "react";
+import Login from "./Login";
+import { clearToken, getUsuario, type Usuario } from "./api";
 
 export default function App() {
-  const [n, setN] = useState(0);
-  const [statusServidor, setStatusServidor] = useState('Carregando...');
-  const [tarefas, setTarefas] = useState<Tarefa[]>([]);
-  const [erro, setErro] = useState('');
+  /**
+   * O useState recebe uma FUNÇÃO como valor inicial. O React entende que
+   * aquilo é uma "fábrica" e a chama uma única vez, já no primeiro render.
+   *
+   * Por que não getUsuario() direto? Porque a cada re-render o array
+   * [usuario, setUsuario] é recriado. Se chamássemos direto, o token seria
+   * lido e decodificado a cada tecla digitada na tela.
+   */
+  const [usuario, setUsuario] = useState<Usuario | null>(() => getUsuario());
 
-  useEffect(() => {
-    const verificarConexao = async () => {
-      try {
-        const resposta = await fetch('http://localhost:3000/api/health');
+  /**
+   * Derivamos o "está logado?" do próprio usuario, em vez de guardar dois
+   * estados que poderiam ficar dessincronizados (ex.: logado=true e usuario=null).
+   */
+  const logado = usuario !== null;
 
-        if (!resposta.ok) {
-          throw new Error('Resposta inválida do servidor');
-        }
+  /** Chamado pelo Login quando a autenticação dá certo. */
+  const aoLogar = (): void => {
+    setUsuario(getUsuario());
+  };
 
-        const dados = await resposta.json();
-        console.log('Dados da API:', dados);
-        setStatusServidor('Conexão estabelecida com sucesso!');
-      } catch (error) {
-        console.error('Erro ao conectar com o servidor:', error);
-        setStatusServidor('Erro ao conectar com o servidor');
-      }
-    };
+  /** Chamado pelo botão "Sair": apaga o token e volta ao login. */
+  const aoSair = (): void => {
+    clearToken();
+    setUsuario(null);
+  };
 
-    void verificarConexao();
-  }, []);
-
-  useEffect(() => {
-    const carregarTarefas = async () => {
-      try {
-        const tarefasCarregadas = await listarTarefas();
-        setTarefas(tarefasCarregadas);
-        console.log('Tarefas carregadas:', tarefasCarregadas);
-      } catch (error) {
-        const mensagem =
-          error instanceof Error
-            ? error.message
-            : 'Erro ao carregar as tarefas.';
-        setErro(mensagem);
-      }
-    };
-
-    void carregarTarefas();
-  }, []);
+  if (!logado) {
+    return <Login aoLogar={aoLogar} />;
+  }
 
   return (
-    <main className="app-shell">
-      <Saudacao />
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-4">
+      <header className="text-center">
+        <h1 className="text-3xl font-extrabold tracking-tight text-white">
+          Bem-vindo, {usuario.email}!
+        </h1>
+        <p className="mt-2 text-sm text-slate-400">
+          Autenticação funcionando. A lista de tarefas chega na Aula 07.
+        </p>
+      </header>
 
-      <section className="painel">
-        <h2>Contador interativo</h2>
-        <button type="button" onClick={() => setN((valor) => valor + 1)}>
-          Cliquei {n} vezes
-        </button>
-      </section>
-
-      <section className="painel">
-        <h2>Status do Servidor</h2>
-        <p>{statusServidor}</p>
-      </section>
-
-      <section className="painel">
-        <h2>Minhas Tarefas</h2>
-        {erro ? (
-          <p className="erro">{erro}</p>
-        ) : tarefas.length === 0 ? (
-          <p>Nenhuma tarefa cadastrada.</p>
-        ) : (
-          <ul className="lista-tarefas">
-            {tarefas.map((tarefa) => (
-              <li key={tarefa.id}>{tarefa.titulo}</li>
-            ))}
-          </ul>
-        )}
-      </section>
-    </main>
+      <button
+        onClick={aoSair}
+        className="rounded-md border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-slate-500 hover:text-white"
+      >
+        Sair
+      </button>
+    </div>
   );
 }
